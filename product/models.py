@@ -4,19 +4,6 @@ from django.utils.text import slugify
 from django.contrib.auth.models import User
 
 
-class Category(models.Model):
-    category = models.CharField(max_length=150)
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        verbose_name_plural = "Categories"
-        ordering = ['-created']
-
-    def __str__(self):
-        return self.category
-
-
 class Product(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -47,7 +34,7 @@ class Product(models.Model):
 
 
 class ProductImage(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, related_name='images', null=True)
     image = models.URLField()
 
     def __str__(self):

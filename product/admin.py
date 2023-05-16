@@ -1,11 +1,5 @@
 from django.contrib import admin
-from .models import Product, ProductImage, Category
-
-
-@admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('category', 'created', 'modified')
-    search_fields = ('category',)
+from .models import Product, ProductImage
 
 
 class ProductImageInline(admin.TabularInline):

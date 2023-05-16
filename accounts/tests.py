@@ -5,7 +5,7 @@ from rest_framework.views import status
 from knox.models import AuthToken
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
-from product.models import Product, Category, Cart, CartProduct, Order
+from product.models import Product, Cart, CartProduct, Order
 from product.serializers import ProductSerializer, CartSerializer, OrderSerializer
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, ChangePasswordSerializer
 

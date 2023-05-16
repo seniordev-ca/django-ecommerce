@@ -1,16 +1,21 @@
 from django.db import models
 from django.db.models import fields
-from .models import Product, Category, CartProduct, Cart, Order
+from .models import Product, ProductImage, CartProduct, Cart, Order
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
 
-class ProductSerializer(serializers.ModelSerializer):
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = '__all__'
 
+
+class ProductSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(many=True, read_only=True)
     class Meta:
         model = Product
         fields = '__all__'
-
 
 class CartProductSerializer(serializers.ModelSerializer):
     product = serializers.StringRelatedField()
