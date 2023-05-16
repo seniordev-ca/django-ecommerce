@@ -16,7 +16,7 @@ This repository contains a Django project built with Django Rest Framework (DRF)
 2. Navigate to the project directory:
 
    ```bash
-   cd your-repository
+   cd django-ecommerce
    ```
 3. Create a virtual environment:
    ```bash
