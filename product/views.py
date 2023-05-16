@@ -1,7 +1,7 @@
 from django.http import JsonResponse, HttpResponseNotFound
 from rest_framework import viewsets
 from django.shortcuts import get_object_or_404
-from .models import Product, CartProduct, Order
+from .models import Product, CartProduct, Order, User, OrderedProduct
 from .serializers import ProductSerializer, CartSerializer, OrderSerializer
 from rest_framework.decorators import api_view
 
@@ -48,13 +48,16 @@ def CheckCart(request):
 @api_view(["GET", "POST"])
 def OrderPlace(request):
     # Get user and shipping address from request
-    user = request.user
-    shipping_address = request.data.get('shipping_address')
+    # user = request.user
+    # Fetch the first user from the database
+    user = User.objects.first()
+
+    shipping_address = request.data.get('shippingInfo')
 
     # Get product IDs and quantities from request
-    products_data = request.data.get('products')
+    products_data = request.data.get('cartItems')
     product_ids = [item['id'] for item in products_data]
-    quantities = [item['quantity'] for item in products_data]
+    quantities = [item['count'] for item in products_data]
 
     # Get products and calculate total price
     products = []
@@ -70,7 +73,9 @@ def OrderPlace(request):
 
     # Add ordered products to order
     for i in range(len(products)):
-        order.ordered_products.add(products[i], through_defaults={'quantity': quantities[i]})
+        ordered_product = OrderedProduct(order=order, product=products[i], quantity=quantities[i])
+        ordered_product.save()
+        # order.ordered_products.add(products[i], through_defaults={'quantity': quantities[i]})
 
     # Serialize order data and return response
     serializer = OrderSerializer(order)

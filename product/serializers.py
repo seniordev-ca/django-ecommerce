@@ -1,6 +1,4 @@
-from django.db import models
-from django.db.models import fields
-from .models import Product, ProductImage, CartProduct, Cart, Order
+from .models import Product, ProductImage, CartProduct, Cart, Order, OrderedProduct
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
@@ -34,8 +32,16 @@ class CartSerializer(serializers.ModelSerializer):
         fields = ('id', 'user', 'cart_products', 'created', 'modified')
 
 
+class OrderedProductSerializer(serializers.ModelSerializer):
+    product = ProductSerializer()
+
+    class Meta:
+        model = OrderedProduct
+        fields = ['product', 'quantity']
+
+
 class OrderSerializer(serializers.ModelSerializer):
-    ordered_products = serializers.PrimaryKeyRelatedField(many=True, queryset=Product.objects.all())
+    ordered_products = OrderedProductSerializer(many=True)
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
     class Meta:

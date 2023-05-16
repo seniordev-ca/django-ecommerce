@@ -1,3 +1,4 @@
+import json
 import uuid
 from django.db import models
 from django.utils.text import slugify
@@ -17,7 +18,7 @@ class Product(models.Model):
     # Generate random slugs
     def save(self, *args, **kwargs):
         global str
-        if self.slug == None:
+        if self.slug is None:
             slug = slugify(self.title)
 
             has_slug = Product.objects.filter(slug=slug).exists()
@@ -62,9 +63,9 @@ class CartProduct(models.Model):
 
 class Order(models.Model):
     order_number = models.UUIDField(unique=True, editable=False)
-    ordered_products = models.ManyToManyField(Product, related_name='orders')
+    # ordered_products = models.ManyToManyField(Product, related_name='orders')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    shipping_address = models.CharField(max_length=255)
+    shipping_address = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     total_price = models.FloatField(default=0)
     modified = models.DateTimeField(auto_now=True)
@@ -74,5 +75,20 @@ class Order(models.Model):
             self.order_number = uuid.uuid4()
         super().save(*args, **kwargs)
 
+    def set_shipping_address(self, address):
+        self.shipping_address = json.dumps(address)
+
+    def get_shipping_address(self):
+        return json.loads(self.shipping_address)
+
     class Meta:
         ordering = ['-created']
+
+
+class OrderedProduct(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='ordered_products')
+    product = models.ForeignKey('product.Product', on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        unique_together = ('order', 'product')
