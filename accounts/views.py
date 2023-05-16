@@ -1,13 +1,7 @@
-from django.http import JsonResponse, request
-from django.shortcuts import render, get_object_or_404
-
+from django.http import JsonResponse
 from rest_framework import serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
-from product.models import Product, Cart, CartProduct, Order
-from product.serializers import ProductSerializer, CartSerializer, OrderSerializer
-
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from knox.models import AuthToken
@@ -15,7 +9,6 @@ from knox.views import LogoutView
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, ChangePasswordSerializer
 
 from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
@@ -97,12 +90,3 @@ def ApiOverview(request):
         "Check cart": "/cart",
     }
     return JsonResponse(api_urls)
-
-
-@api_view(["GET", "POST"])
-def ProductsView(request):
-    products = Product.objects.filter(published=True)
-    serializers = ProductSerializer(products, many=True)
-    return JsonResponse({
-        'data': serializers.data
-    })

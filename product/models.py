@@ -42,25 +42,6 @@ class ProductImage(models.Model):
         return f"New Image"
 
 
-class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    products = models.ManyToManyField(Product)
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"{self.user.username}'s Cart"
-
-
-class CartProduct(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
-
-    def __str__(self):
-        return f"{self.quantity} x {self.product.title} in {self.cart.user.username}'s Cart'"
-
-
 class Order(models.Model):
     order_number = models.UUIDField(unique=True, editable=False)
     # ordered_products = models.ManyToManyField(Product, related_name='orders')

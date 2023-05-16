@@ -1,8 +1,8 @@
 from django.http import JsonResponse, HttpResponseNotFound
 from rest_framework import viewsets
 from django.shortcuts import get_object_or_404
-from .models import Product, CartProduct, Order, User, OrderedProduct
-from .serializers import ProductSerializer, CartSerializer, OrderSerializer
+from .models import Product, Order, User, OrderedProduct
+from .serializers import ProductSerializer, OrderSerializer
 from rest_framework.decorators import api_view
 
 
@@ -32,17 +32,6 @@ def ProductDetail(request, slug):
         print(e)
         # raise Http404("Please contact administrator")
         return HttpResponseNotFound('<h1>Not found</h1>')
-
-
-@api_view(["GET", "POST"])
-def CheckCart(request):
-    user = request.user
-    cart = get_object_or_404(Cart, user=user)
-    cart_products = CartProduct.objects.filter(cart=cart)
-    serializer = CartSerializer(cart, context={'request': request})
-    return JsonResponse({
-        'data': serializer.data
-    })
 
 
 @api_view(["GET", "POST"])
@@ -82,14 +71,3 @@ def OrderPlace(request):
     return JsonResponse({
         'data': serializer.data
     })
-
-
-@api_view(["GET", "POST"])
-def OrderDetail(request, order_id):
-    try:
-        order = Order.objects.get(pk=order_id)
-    except Order.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    serializer = OrderSerializer(order)
-    return Response(serializer.data)

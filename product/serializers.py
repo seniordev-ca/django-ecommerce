@@ -1,4 +1,4 @@
-from .models import Product, ProductImage, CartProduct, Cart, Order, OrderedProduct
+from .models import Product, ProductImage, Order, OrderedProduct
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
@@ -11,25 +11,10 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
+
     class Meta:
         model = Product
         fields = '__all__'
-
-class CartProductSerializer(serializers.ModelSerializer):
-    product = serializers.StringRelatedField()
-
-    class Meta:
-        model = CartProduct
-        fields = ('product', 'quantity')
-
-
-class CartSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField()
-    cart_products = CartProductSerializer(many=True)
-
-    class Meta:
-        model = Cart
-        fields = ('id', 'user', 'cart_products', 'created', 'modified')
 
 
 class OrderedProductSerializer(serializers.ModelSerializer):

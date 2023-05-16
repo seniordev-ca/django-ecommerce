@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework import routers
-from .views import ApiOverview, LoginAPI, RegisterAPI, ChangePasswordAPI, LogoutAPI
+from .views import LoginAPI, RegisterAPI, ChangePasswordAPI, LogoutAPI
 
 router = routers.DefaultRouter()
 
