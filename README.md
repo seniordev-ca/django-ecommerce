@@ -45,4 +45,8 @@ This repository contains a Django project built with Django Rest Framework (DRF)
    ```bash
    python manage.py runserver
    ```
-2. Open your web browser and visit http://localhost:8000 to access the application.
+2. Create superuser if you want to create new products and see it on [front-end](https://github.com/seniordev-ca/next-ecommerce)
+   ```bash
+   python manage.py createsuperuser
+   ```
+4. Open your web browser and visit http://localhost:8000 to access the application.
